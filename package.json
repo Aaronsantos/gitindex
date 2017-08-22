@@ -1,0 +1,20 @@
+{
+  "name": "projeto-ls",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.0",
+    "webpack": "^3.5.5"
+  },
+  "scripts": {
+    "start": "http-server --cors",
+    "webpack": "./node_modules/webpack/bin/webpack.js --config webpack.conf.js"
+  },
+  "dependencies": {
+    "chartjs": "^0.3.24"
+  }
+
+}

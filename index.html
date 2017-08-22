@@ -4,27 +4,38 @@
     <meta name="viewport" content="width=device-width">
     <meta charset="utf-8">
     <title>GITindex</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animate.css">
   </head>
+
   <body>
       <header>
         <img src="img/logo2.png" alt="">
         <h1>GitIndex</h1>
       </header>
+
       <main>
-
-          <input type="text" id="search" placeholder="GitHub Username" >
-          <input type="submit" id="submit_search" value="GO!">
-        <div class="search_result">
-
+      <!--  <div class="BTcontainer">
+          <button type="button" id="opsearch" class="btop">Search users</button>
+          <button type="button" name="compare" class="btop">Compare Repositories</button> -->
         </div>
 
+        <div class="search_form wow fadein">
+          <input type="text" id="search" placeholder="GitHub Username" >
+          <input type="submit" id="submit_search" value="GO!">
+        </div>
+
+        <div id="search_result"> </div>
+        <canvas id="my-chart"></canvas>
+
       </main>
+
       <footer class="info">
-
           <p>Find Github users and their infos with a few clicks </p>
-
       </footer>
-      <script src="app.js"></script>
+
+      <script src="js/wow.min.js"></script>
+      <script> new WOW().init(); </script>
+     <script src="dist/bundle.js"></script>
   </body>
 </html>

@@ -1,0 +1,116 @@
+// https://api.github.com/search/users?q=aaron
+//CODE WITH W3C DOM (SEARCH SYSTEM)
+
+import Chart from 'chartjs'
+
+
+let main = document.querySelector('main')
+let result = document.querySelector('#search_result')
+const searchArea = document.querySelector('#search')
+const btGo = document.querySelector('#submit_search')
+
+
+  btGo.addEventListener("click", function(event) {
+
+    let pattern = /\W/
+    if( !(pattern.test(searchArea.value)) )
+    {
+      let url = `https://api.github.com/search/users?q=${searchArea.value}`
+      fetch(url)
+      .then(data => data.json())
+      .then( function(data){
+
+        result.innerHTML = `<h3> foram encontrados ${data.items.length} resultados para " ${searchArea.value} "</h3>`
+        for(let i = 0; i < data.items.length; i++)
+        {
+          let userinfo_content = ` <div class="result_item wow fadeIn">
+          <a href="${data.items[i].html_url}"><img src="${data.items[i].avatar_url}" alt="" class="user_avatar"></a>
+          <div class="user_info">
+          <a href="${data.items[i].html_url}" class="user_nickname">${data.items[i].login}</a>
+          </div>
+          <input type="checkbox" id="show-info${i+1}" class="show-info">
+          <label for="show-info${i+1}"> Show more </label>
+
+          <div id="user_more_info${i+1}" class="user_more_info">
+          <img src=img/spin.gif class="spin">
+          </div>
+          </div>`
+
+          result.insertAdjacentHTML('beforeend', userinfo_content )
+          let btmore_info = document.querySelector(`#show-info${i+1}`)
+          let fdmore_info = document.querySelector(`#user_more_info${i+1}`)
+          let repourl = `https://api.github.com/users/${data.items[i].login}/repos`
+          let userurl = `https://api.github.com/users/${data.items[i].login}`
+          btmore_info.addEventListener('click', function(){
+
+            fetch(userurl)
+            .then(userinfo => userinfo.json())
+            .then(function(user){
+              let result_more_info = `<div class="user_bio"> <h3>${user.name}</h3> <p> ${user.bio != null ? user.bio : ''} </p> <p> Followers: ${user.followers} | Following: ${user.following} </p> <p> ${user.email != null ? user.email : ''} </p>`
+              fdmore_info.innerHTML = result_more_info
+            })
+
+            fetch(repourl)
+            .then(repos => repos.json())
+            .then( function(repos){
+              console.log(repos)
+              let result_repo =   `<div class="repo_field">
+              <h3>Repositories of ${repos[0].owner.login}:</h3>
+              <div class="repo_flex">
+              <ul class="repo_flex">`
+
+              result_repo += repos.map(list_repo).join('')
+              let i = 1;
+              result_repo += `</ul></div>
+              <h3>Repo Info:</h3>
+              <canvas id="repo${repos[0].owner.login}"> </canvas>
+              </div> `
+              fdmore_info.innerHTML += result_repo
+              createChart(repos)
+            })
+          })
+        }
+      } )
+
+    }else
+    {
+      alert("São aceitos apenas letras, números e espaços na pesquisa.")
+    }
+        })
+
+
+let list_repo = function(value)
+{
+  let result = `<li><a href="${value.html_url}" > ${value.name} </a> <p><span class="star"> </span>${value.stargazers_count}</p> <p class="repo_len"> ${ value.language != null ? value.language : '' }</p> </li>`
+  //if(i%10 === 0) result += '</li> </ul> <ul> <li>'
+  //i++;
+  return result
+}
+
+function createChart(repos)
+{
+  let data = {
+    labels: [],
+    datasets: [{
+      data: [],
+      backgroundColor: ["#9999dd"],
+      hoverBackgroundColor: ["#aaaaaa"]
+    }]
+  }
+  console.log('Coiso')
+  console.log(data.datasets)
+  for(let values of repos)
+  {
+    data.datasets.data.push(values.stargazers_count)
+    data.labels.push(values.name)
+  }
+
+  let type = {
+    type: 'bar',
+    data: data
+  }
+  let ctx = document.querySelector(`#repo${repos[0].owner.login}`)
+  new Chart(ctx, type);
+  console.log(type)
+}
+//})
