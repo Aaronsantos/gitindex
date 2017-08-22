@@ -210,7 +210,7 @@ main{
 }
 
 .star{
-  background-image: url("img/star.png");
+  background-image: url("../img/star.png");
   background-size: cover;
   width: 20px;
   height: 20px;
